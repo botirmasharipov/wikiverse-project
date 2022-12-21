@@ -1,7 +1,9 @@
 import React from "react"
 import { Page } from "./Page"
 
-export const PagesList = ({ pages, formData, setFormData, singlePageView }) => {
+export const PagesList = ({ pages, setPages, singlePageView, setSinglePageView, author,
+  setAuthor, currentArticle, setCurrentArticle, wikiTags, setWikiTags
+}) => {
   return (
     <>
       {singlePageView
@@ -12,8 +14,14 @@ export const PagesList = ({ pages, formData, setFormData, singlePageView }) => {
                 page={page}
                 key={idx}
                 pages={pages}
-                formData={formData}
-                setFormData={setFormData}
+                setPages={setPages}
+                singlePageView={singlePageView}
+                setSinglePageView={setSinglePageView}
+                author={author}
+                setAuthor={setAuthor}
+                setCurrentArticle={setCurrentArticle}
+                wikiTags={wikiTags}
+                setWikiTags={setWikiTags}
               />
             )
           )
@@ -23,8 +31,14 @@ export const PagesList = ({ pages, formData, setFormData, singlePageView }) => {
             page={page}
             key={index}
             pages={pages}
-            formData={formData}
-            setFormData={setFormData}
+            setPages={setPages}
+            singlePageView={singlePageView}
+            setSinglePageView={setSinglePageView}
+            author={author}
+            setAuthor={setAuthor}
+            setCurrentArticle={setCurrentArticle}
+            wikiTags={wikiTags}
+            setWikiTags={setWikiTags}
           />
         ))}
     </>

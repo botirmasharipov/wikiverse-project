@@ -1,16 +1,43 @@
-import React, { useState } from "react"
+import React, { useEffect } from "react"
 import apiURL from "../api"
 
 
-export const Page = (props) => {
-  const [people, setPeople] = useState("")
+export const Page = ({
+  page,
+  singlePageView,
+  setSinglePageView,
+  author,
+  setAuthor,
+  setCurrentArticle,
+  wikiTags,
+  setWikiTags,
+}) => {
 
-  const handleClick = async () => {
-    // single article page
-    const res = await fetch(`${apiURL}/wiki/${props.page.slug}`)
-    const data = await res.json()
-    console.log(data)
-    setPeople(data)
+  const fetchTags = async () => {
+    try {
+      // single article page
+      const res = await fetch(`${apiURL}/wiki/${page.slug}`)
+      const data = await res.json()
+      setWikiTags(data.tags)
+      setAuthor(data.author)
+      setCurrentArticle(data.slug)
+      console.log(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    fetchTags()
+  }, [])
+
+  const showSinglePageView = () => {
+    fetchTags()
+    setSinglePageView(!singlePageView)
+  }
+
+  const handleBackButton = async () => {
+    setSinglePageView(!singlePageView)
   }
 
   async function fetchPages() {
@@ -26,21 +53,30 @@ export const Page = (props) => {
 
   return (
     <>
-      <h3 onClick={handleClick}>{props.page.title}</h3>
-      <p>
-        Author: {people ? (people.author.name) : ""}
-      </p>
-      <p>
-        <strong>Published:</strong> {people ? people.author.createdAt : ""}
-      </p>
-      {people.content}
-      <p>
-        <strong>Tags:</strong>
-      </p>
-      {people ?
-        people.tags.map((tag, index) => <p key={index}>{tag.name}</p>) : ""}
+      {singlePageView ? (
+        <>
+          <h1>{page.title}</h1>
+          <p>
+            <strong>Author:</strong> {author.name}
+          </p>
+          <p>
+            <strong>Published:</strong> {page.createdAt}
+          </p>
+          {page.content}
+          <p>
+            <strong>Tags:</strong>
+          </p>
+          {
+            wikiTags.map((tag, index) => <p key={index}>{tag.name}</p>)
+          }
 
-      <button onClick={fetchPages}>Back to Wiki List</button>
+          <button onClick={handleBackButton}>Back to Wiki List</button>
+        </>
+
+      ) : (<h3 onClick={showSinglePageView}>{page.title}</h3>)
+      }
+
+
     </>
   )
 }

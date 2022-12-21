@@ -7,6 +7,9 @@ import apiURL from "../api"
 export const App = () => {
 	const [pages, setPages] = useState([])
 	const [singlePageView, setSinglePageView] = useState(false)
+	const [author, setAuthor] = useState("")
+	const [wikiTags, setWikiTags] = useState([])
+	const [currentArticle, setCurrentArticle] = useState("")
 
 	//   show a form
 	const [isAddingArticle, setIsAddingArticle] = useState(false)
@@ -24,9 +27,20 @@ export const App = () => {
 		setFormData({ ...formData, [e.target.name]: e.target.value })
 	}
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault()
-		setPages([...pages, formData])
+		const response = await fetch(`${apiURL}/wiki`, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(
+				formData // our data TO CREATE here
+			)
+		})
+		const data = await response.json()
+		console.log(data, "data")
+		// setPages([...pages, data])
 		setFormData({
 			title: "",
 			content: "",
@@ -65,6 +79,12 @@ export const App = () => {
 				setFormData={setFormData}
 				singlePageView={singlePageView}
 				setSinglePageView={setSinglePageView}
+				author={author}
+				setAuthor={setAuthor}
+				currentArticle={currentArticle}
+				setCurrentArticle={setCurrentArticle}
+				wikiTags={wikiTags}
+				setWikiTags={setWikiTags}
 			/>
 
 			<button onClick={handleCreatePage}>Create Page</button>
